@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Profile Driven Development</title>
+  <meta name="description" content="Now, don’t worry. I’m not here to force a new programming methodoligy upon you. Instead I want to highlight how profiling can, and should, be an important pa...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://mattgreen.io/2015/12/24/profile-driven-development.html">
+  <link rel="alternate" type="application/rss+xml" title="mattgreen" href="https://mattgreen.io/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <div class="site-title">mattgreen</div>
+
+    <nav class="site-nav">
+
+      <a class="page-link" href="/">Home</a>
+      <a class="page-link" href="/blog/">Blog</a>
+
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Profile Driven Development</h1>
+    <p class="post-meta"><time datetime="2015-12-24T20:11:00+00:00" itemprop="datePublished">Dec 24, 2015</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Now, don’t worry. I’m not here to force a new programming methodoligy upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.</p>
+
+<p>A few months ago, we (the tech team for Net-A-Porter.com) were getting ready to launch our newest application - a new webapp to serve all of our product pages. But during load testing, we noticed very high levels of CPU on the server.</p>
+
+<p>As far as the server is concerned, it’s a fairly simple app. Written in Node.js, it makes HTTP requests to a couple of our internal APIs, and then spits out some HTML. Therefore high CPU levels seemed odd for a process which doesn’t do much in the way of CPU-intensive work. Some investigation needed to occur.</p>
+
+<h3 id="introducing-the-v8-profiler">Introducing the V8-profiler</h3>
+
+<p>I’m not overly familiar with profiling tools, but after a small bit of internet-ing I came across the <a href="https://www.npmjs.com/package/v8-profiler">v8-profiler</a>. We use Express for our web framework, so I started profiling at the entry point of a request:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">profiler</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;v8-profiler&#39;</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/:countryIso/:langIso/product/:pid&#39;</span><span class="p">,</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">profiler</span><span class="p">.</span><span class="nx">startProfiling</span><span class="p">(</span><span class="s1">&#39;product-page&#39;</span><span class="p">);</span>
+        <span class="nx">next</span><span class="p">();</span>
+    <span class="p">},</span>
+    <span class="c1">// more middleware</span>
+<span class="p">);</span></code></pre></div>
+
+<p>Then, I stop profiling just before sending the payload back to the user, and save the profile data to disk:</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">cpuProfile</span> <span class="o">=</span> <span class="nx">profiler</span><span class="p">.</span><span class="nx">stopProfiling</span><span class="p">(</span><span class="s1">&#39;product-page&#39;</span><span class="p">);</span>
+<span class="nx">cpuProfile</span><span class="p">.</span><span class="kr">export</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="s1">&#39;profile.cpuprofile&#39;</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+    <span class="nx">cpuProfile</span><span class="p">.</span><span class="k">delete</span><span class="p">();</span>
+<span class="p">});</span></code></pre></div>
+
+<p>By using the extension .cpuprofile, the saved data can be loaded into Chrome’s profiles panel in DevTools, giving a nice graphic of what’s going on:</p>
+
+<p><img src="/static/profile-driven-development/profile_before.png" alt="Load profiles into Chrome for useful charts" />
+<em>Load profiles into Chrome for useful charts</em></p>
+
+<h3 id="spotting-the-bottleneck">Spotting the bottleneck</h3>
+
+<p>This may look very confusing at first. Express uses the middleware pattern, meaning that the call stack gets deeper as you go through the chain of middleware. Each time you see ‘next’ followed by ‘handle’, it means Express is going to the next piece of middleware. The way to then spot a bottleneck in this chart is to look for two instances of ‘next’ being called with a large amount of time between them.</p>
+
+<p>In this case, a lot of time is being spent doing some sort of compiling:</p>
+
+<p><img src="/static/profile-driven-development/profile_before_highlighted.png" alt="Visualising the data makes problems easy to spot" />
+<em>Visualising the data makes problems easy to spot</em></p>
+
+<p>Looking at the code, I realise that we’re using <a href="http://handlebarsjs.com/">Handlebars</a> to convert template URLs into actual URLs. But the real crippling factor, is that we’re re-compiling the template string <em>every time</em> we generate a URL. Compilation of a template string into a compiled temaplte is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.</p>
+
+<p>With this information uncovered, a fix is easy. We <em>could</em> compile the template string and save it for re-use. But, the template is slightly different for each product on the website, so we’d have to do at least one compilation per request. A better alternative, which avoids the use of a library entirely, is to simply use <code>String.replace()</code> to replace each variable in the string for the value we want.</p>
+
+<h3 id="the-results">The Results</h3>
+
+<p>Running the improved code through the V8-profiler again yeilds this profile chart:</p>
+
+<p><img src="/static/profile-driven-development/profile_after_highlighted.png" alt="Ahh, much better" />
+<em>Ahh, much better</em></p>
+
+<p>The bits highlighted in the red box are the pieces of middleware which were previously taking a long time. Now they are quick enough for the profile to consider them taking zero time.</p>
+
+<p>The impact on CPU was clear as well. When put through another load test, rather than CPU being pegged at 95-100% for the duration, it increased and decreased with the amount of load being put through it. This is exactly what we’d expect to see from a system such as this.</p>
+
+<p>Whilst this bit of code doesn’t need optimising any further yet, this did get me thinking - is <code>String.replace()</code> the best method for this task? For the answer to that, you have to wait until next time…</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">About Matt...</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="mugshot footer-col footer-col-1"></div>
+
+      <div class="contact footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/mjgreen145"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">Github</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/mjgreen145"><span class="icon icon--twitter"><svg viewBox="0 0 16 16"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">Twitter</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="description footer-col footer-col-3">
+        <p>Hi! I'm a developer currently working at Net-A-Porter. I have a keen interest in all things Web, with a particular focus on web performance. Blog posts will be a collection of my findings/musings on this subject. Enjoy!
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
