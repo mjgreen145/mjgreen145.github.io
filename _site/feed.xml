@@ -6,8 +6,8 @@
 </description>
     <link>https://mattgreen.io/</link>
     <atom:link href="https://mattgreen.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 27 Dec 2015 19:02:16 +0000</pubDate>
-    <lastBuildDate>Sun, 27 Dec 2015 19:02:16 +0000</lastBuildDate>
+    <pubDate>Sat, 20 Feb 2016 17:44:03 +0000</pubDate>
+    <lastBuildDate>Sat, 20 Feb 2016 17:44:03 +0000</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -70,9 +70,9 @@
 
 &lt;p&gt;Whilst this bit of code doesn’t need optimising any further yet, this did get me thinking - is &lt;code&gt;String.replace()&lt;/code&gt; the best method for this task? For the answer to that, you have to wait until next time…&lt;/p&gt;
 </description>
-        <pubDate>Thu, 24 Dec 2015 20:11:00 +0000</pubDate>
-        <link>https://mattgreen.io/2015/12/24/profile-driven-development.html</link>
-        <guid isPermaLink="true">https://mattgreen.io/2015/12/24/profile-driven-development.html</guid>
+        <pubDate>Sat, 20 Feb 2016 20:11:00 +0000</pubDate>
+        <link>https://mattgreen.io/2016/02/20/profile-driven-development.html</link>
+        <guid isPermaLink="true">https://mattgreen.io/2016/02/20/profile-driven-development.html</guid>
         
         
       </item>
