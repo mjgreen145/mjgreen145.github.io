@@ -157,7 +157,9 @@
     list-style: none;
 
     > li {
+        padding-bottom: $spacing-unit;
         margin-bottom: $spacing-unit;
+        border-bottom: 1px solid #CCCCCC;
     }
 }
 

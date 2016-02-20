@@ -4,7 +4,9 @@ title:  "Profile Driven Development"
 date:   2016-02-20 20:11:00 +0000
 ---
 
-Now, don't worry. I'm not here to force a new programming methodoligy upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.
+Now, don't worry. I'm not here to force a new programming methodology upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.
+
+<!--more-->
 
 A few months ago, we (the tech team for Net-A-Porter.com) were getting ready to launch our newest application - a new webapp to serve all of our product pages. But during load testing, we noticed very high levels of CPU on the server. 
 

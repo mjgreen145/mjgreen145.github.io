@@ -6,13 +6,15 @@
 </description>
     <link>https://mattgreen.io/</link>
     <atom:link href="https://mattgreen.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 20 Feb 2016 17:44:03 +0000</pubDate>
-    <lastBuildDate>Sat, 20 Feb 2016 17:44:03 +0000</lastBuildDate>
+    <pubDate>Sat, 20 Feb 2016 17:54:00 +0000</pubDate>
+    <lastBuildDate>Sat, 20 Feb 2016 17:54:00 +0000</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
         <title>Profile Driven Development</title>
-        <description>&lt;p&gt;Now, don’t worry. I’m not here to force a new programming methodoligy upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.&lt;/p&gt;
+        <description>&lt;p&gt;Now, don’t worry. I’m not here to force a new programming methodology upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.&lt;/p&gt;
+
+&lt;!--more--&gt;
 
 &lt;p&gt;A few months ago, we (the tech team for Net-A-Porter.com) were getting ready to launch our newest application - a new webapp to serve all of our product pages. But during load testing, we noticed very high levels of CPU on the server.&lt;/p&gt;
 

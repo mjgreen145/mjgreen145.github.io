@@ -262,7 +262,9 @@ pre {
   margin-left: 0;
   list-style: none; }
   .post-list > li {
-    margin-bottom: 30px; }
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #CCCCCC; }
 
 .post-meta {
   font-size: 14px;
