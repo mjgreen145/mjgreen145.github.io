@@ -6,15 +6,13 @@
 </description>
     <link>https://mattgreen.io/</link>
     <atom:link href="https://mattgreen.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 25 Feb 2016 15:00:32 +0000</pubDate>
-    <lastBuildDate>Thu, 25 Feb 2016 15:00:32 +0000</lastBuildDate>
+    <pubDate>Sun, 27 Dec 2015 19:02:16 +0000</pubDate>
+    <lastBuildDate>Sun, 27 Dec 2015 19:02:16 +0000</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
         <title>Profile Driven Development</title>
-        <description>&lt;p&gt;Now, don’t worry. I’m not here to force a new programming methodology upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.&lt;/p&gt;
-
-&lt;!--more--&gt;
+        <description>&lt;p&gt;Now, don’t worry. I’m not here to force a new programming methodoligy upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.&lt;/p&gt;
 
 &lt;p&gt;A few months ago, we (the tech team for Net-A-Porter.com) were getting ready to launch our newest application - a new webapp to serve all of our product pages. But during load testing, we noticed very high levels of CPU on the server.&lt;/p&gt;
 
@@ -55,13 +53,13 @@
 &lt;p&gt;&lt;img src=&quot;/static/profile-driven-development/profile_before_highlighted.png&quot; alt=&quot;Visualising the data makes problems easy to spot&quot; /&gt;
 &lt;em&gt;Visualising the data makes problems easy to spot&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;Looking at the code, I realise that we’re using &lt;a href=&quot;http://handlebarsjs.com/&quot;&gt;Handlebars&lt;/a&gt; to convert template URLs into actual URLs. But the real crippling factor, is that we’re re-compiling the template string &lt;em&gt;every time&lt;/em&gt; we generate a URL. Compilation of a template string into a compiled template is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.&lt;/p&gt;
+&lt;p&gt;Looking at the code, I realise that we’re using &lt;a href=&quot;http://handlebarsjs.com/&quot;&gt;Handlebars&lt;/a&gt; to convert template URLs into actual URLs. But the real crippling factor, is that we’re re-compiling the template string &lt;em&gt;every time&lt;/em&gt; we generate a URL. Compilation of a template string into a compiled temaplte is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.&lt;/p&gt;
 
 &lt;p&gt;With this information uncovered, a fix is easy. We &lt;em&gt;could&lt;/em&gt; compile the template string and save it for re-use. But, the template is slightly different for each product on the website, so we’d have to do at least one compilation per request. A better alternative, which avoids the use of a library entirely, is to simply use &lt;code&gt;String.replace()&lt;/code&gt; to replace each variable in the string for the value we want.&lt;/p&gt;
 
 &lt;h3 id=&quot;the-results&quot;&gt;The Results&lt;/h3&gt;
 
-&lt;p&gt;Running the improved code through the V8-profiler again yields this profile chart:&lt;/p&gt;
+&lt;p&gt;Running the improved code through the V8-profiler again yeilds this profile chart:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/static/profile-driven-development/profile_after_highlighted.png&quot; alt=&quot;Ahh, much better&quot; /&gt;
 &lt;em&gt;Ahh, much better&lt;/em&gt;&lt;/p&gt;
@@ -72,9 +70,9 @@
 
 &lt;p&gt;Whilst this bit of code doesn’t need optimising any further yet, this did get me thinking - is &lt;code&gt;String.replace()&lt;/code&gt; the best method for this task? For the answer to that, you have to wait until next time…&lt;/p&gt;
 </description>
-        <pubDate>Sat, 20 Feb 2016 20:11:00 +0000</pubDate>
-        <link>https://mattgreen.io/2016/02/20/profile-driven-development.html</link>
-        <guid isPermaLink="true">https://mattgreen.io/2016/02/20/profile-driven-development.html</guid>
+        <pubDate>Thu, 24 Dec 2015 20:11:00 +0000</pubDate>
+        <link>https://mattgreen.io/2015/12/24/profile-driven-development.html</link>
+        <guid isPermaLink="true">https://mattgreen.io/2015/12/24/profile-driven-development.html</guid>
         
         
       </item>
