@@ -6,7 +6,9 @@ date:   2015-12-24 20:11:00 +0000
 
 Now, don't worry. I'm not here to force a new programming methodoligy upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.
 
-A few months ago, we (the tech team for Net-A-Porter.com) were getting ready to launch our newest application - a new webapp to serve all of our product pages. But during load testing, we noticed very high levels of CPU on the server. 
+<!--more-->
+
+A few months ago, we (the tech team for Net-A-Porter.com) were getting ready to launch our newest application - a new webapp to serve all of our product pages. But during load testing, we noticed very high levels of CPU on the server.
 
 As far as the server is concerned, it's a fairly simple app. Written in Node.js, it makes HTTP requests to a couple of our internal APIs, and then spits out some HTML. Therefore high CPU levels seemed odd for a process which doesn't do much in the way of CPU-intensive work. Some investigation needed to occur.
 
@@ -60,7 +62,7 @@ Running the improved code through the V8-profiler again yeilds this profile char
 ![Ahh, much better](/static/profile-driven-development/profile_after_highlighted.png)
 *Ahh, much better*
 
-The bits highlighted in the red box are the pieces of middleware which were previously taking a long time. Now they are quick enough for the profile to consider them taking zero time. 
+The bits highlighted in the red box are the pieces of middleware which were previously taking a long time. Now they are quick enough for the profile to consider them taking zero time.
 
 The impact on CPU was clear as well. When put through another load test, rather than CPU being pegged at 95-100% for the duration, it increased and decreased with the amount of load being put through it. This is exactly what we'd expect to see from a system such as this.
 
