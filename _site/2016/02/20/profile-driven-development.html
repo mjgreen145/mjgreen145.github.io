@@ -88,13 +88,13 @@
 <p><img src="/static/profile-driven-development/profile_before_highlighted.png" alt="Visualising the data makes problems easy to spot" />
 <em>Visualising the data makes problems easy to spot</em></p>
 
-<p>Looking at the code, I realise that we’re using <a href="http://handlebarsjs.com/">Handlebars</a> to convert template URLs into actual URLs. But the real crippling factor, is that we’re re-compiling the template string <em>every time</em> we generate a URL. Compilation of a template string into a compiled temaplte is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.</p>
+<p>Looking at the code, I realise that we’re using <a href="http://handlebarsjs.com/">Handlebars</a> to convert template URLs into actual URLs. But the real crippling factor, is that we’re re-compiling the template string <em>every time</em> we generate a URL. Compilation of a template string into a compiled template is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.</p>
 
 <p>With this information uncovered, a fix is easy. We <em>could</em> compile the template string and save it for re-use. But, the template is slightly different for each product on the website, so we’d have to do at least one compilation per request. A better alternative, which avoids the use of a library entirely, is to simply use <code>String.replace()</code> to replace each variable in the string for the value we want.</p>
 
 <h3 id="the-results">The Results</h3>
 
-<p>Running the improved code through the V8-profiler again yeilds this profile chart:</p>
+<p>Running the improved code through the V8-profiler again yields this profile chart:</p>
 
 <p><img src="/static/profile-driven-development/profile_after_highlighted.png" alt="Ahh, much better" />
 <em>Ahh, much better</em></p>

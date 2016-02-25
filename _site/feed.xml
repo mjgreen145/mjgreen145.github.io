@@ -6,8 +6,8 @@
 </description>
     <link>https://mattgreen.io/</link>
     <atom:link href="https://mattgreen.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 20 Feb 2016 17:59:01 +0000</pubDate>
-    <lastBuildDate>Sat, 20 Feb 2016 17:59:01 +0000</lastBuildDate>
+    <pubDate>Thu, 25 Feb 2016 15:00:32 +0000</pubDate>
+    <lastBuildDate>Thu, 25 Feb 2016 15:00:32 +0000</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -55,13 +55,13 @@
 &lt;p&gt;&lt;img src=&quot;/static/profile-driven-development/profile_before_highlighted.png&quot; alt=&quot;Visualising the data makes problems easy to spot&quot; /&gt;
 &lt;em&gt;Visualising the data makes problems easy to spot&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;Looking at the code, I realise that we’re using &lt;a href=&quot;http://handlebarsjs.com/&quot;&gt;Handlebars&lt;/a&gt; to convert template URLs into actual URLs. But the real crippling factor, is that we’re re-compiling the template string &lt;em&gt;every time&lt;/em&gt; we generate a URL. Compilation of a template string into a compiled temaplte is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.&lt;/p&gt;
+&lt;p&gt;Looking at the code, I realise that we’re using &lt;a href=&quot;http://handlebarsjs.com/&quot;&gt;Handlebars&lt;/a&gt; to convert template URLs into actual URLs. But the real crippling factor, is that we’re re-compiling the template string &lt;em&gt;every time&lt;/em&gt; we generate a URL. Compilation of a template string into a compiled template is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.&lt;/p&gt;
 
 &lt;p&gt;With this information uncovered, a fix is easy. We &lt;em&gt;could&lt;/em&gt; compile the template string and save it for re-use. But, the template is slightly different for each product on the website, so we’d have to do at least one compilation per request. A better alternative, which avoids the use of a library entirely, is to simply use &lt;code&gt;String.replace()&lt;/code&gt; to replace each variable in the string for the value we want.&lt;/p&gt;
 
 &lt;h3 id=&quot;the-results&quot;&gt;The Results&lt;/h3&gt;
 
-&lt;p&gt;Running the improved code through the V8-profiler again yeilds this profile chart:&lt;/p&gt;
+&lt;p&gt;Running the improved code through the V8-profiler again yields this profile chart:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/static/profile-driven-development/profile_after_highlighted.png&quot; alt=&quot;Ahh, much better&quot; /&gt;
 &lt;em&gt;Ahh, much better&lt;/em&gt;&lt;/p&gt;
