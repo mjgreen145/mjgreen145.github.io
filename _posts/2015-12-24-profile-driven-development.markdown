@@ -4,7 +4,7 @@ title:  "Profile Driven Development"
 date:   2015-12-24 20:11:00 +0000
 ---
 
-Now, don't worry. I'm not here to force a new programming methodoligy upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.
+Now, don't worry. I'm not here to force a new programming methodology upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.
 
 <!--more-->
 
@@ -51,7 +51,7 @@ In this case, a lot of time is being spent doing some sort of compiling:
 ![Visualising the data makes problems easy to spot](/static/profile-driven-development/profile_before_highlighted.png)
 *Visualising the data makes problems easy to spot*
 
-Looking at the code, I realise that we're using [Handlebars](http://handlebarsjs.com/) to convert template URLs into actual URLs. But the real crippling factor, is that we're re-compiling the template string _every time_ we generate a URL. Compilation of a template string into a compiled temaplte is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.
+Looking at the code, I realise that we're using [Handlebars](http://handlebarsjs.com/) to convert template URLs into actual URLs. But the real crippling factor, is that we're re-compiling the template string _every time_ we generate a URL. Compilation of a template string into a compiled template is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.
 
 With this information uncovered, a fix is easy. We _could_ compile the template string and save it for re-use. But, the template is slightly different for each product on the website, so we'd have to do at least one compilation per request. A better alternative, which avoids the use of a library entirely, is to simply use `String.replace()` to replace each variable in the string for the value we want.
 

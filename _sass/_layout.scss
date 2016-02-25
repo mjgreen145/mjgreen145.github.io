@@ -25,7 +25,7 @@
 .site-nav {
     float: right;
     line-height: 56px;
-    
+
     text-align: center;
     width: 50%;
     margin-top: 20px;
@@ -79,13 +79,13 @@
     margin-left: 0;
     @include media-query($on-palm) {
         text-align: center;
-    } 
+    }
 
     li {
         @include media-query($on-palm) {
             display: inline-block;
             margin: 0 10px;
-        }       
+        }
     }
 }
 
@@ -157,7 +157,9 @@
     list-style: none;
 
     > li {
+        padding-bottom: $spacing-unit;
         margin-bottom: $spacing-unit;
+        border-bottom: 1px solid #CCCCCC;
     }
 }
 
