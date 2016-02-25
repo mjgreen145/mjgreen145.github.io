@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Profile Driven Development"
-date:   2015-12-24 20:11:00 +0000
+date:   2016-02-24 00:00:00 +0000
 ---
 
 Now, don't worry. I'm not here to force a new programming methodology upon you. Instead I want to highlight how profiling can, and should, be an important part of your development process, and how it can help produce quality code.
