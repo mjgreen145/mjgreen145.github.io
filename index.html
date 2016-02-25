@@ -18,10 +18,10 @@ url: /
         </h2>
 
         {% if post.excerpt %}
-+          {{ post.excerpt }}
-+        {% endif %}
-+
-+        <a class="read-more" href="{{ post.url | prepend: site.baseurl }}">Read more</a>
+          {{ post.excerpt }}
+        {% endif %}
+
+        <a class="read-more" href="{{ post.url | prepend: site.baseurl }}">Read more</a>
       </li>
     {% endfor %}
   </ul>
