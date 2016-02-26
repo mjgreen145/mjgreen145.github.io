@@ -51,13 +51,13 @@ In this case, a lot of time is being spent doing some sort of compiling:
 ![Visualising the data makes problems easy to spot](/static/profile-driven-development/profile_before_highlighted.png)
 *Visualising the data makes problems easy to spot*
 
-Looking at the code, I realise that we're using [Handlebars](http://handlebarsjs.com/) to convert template URLs into actual URLs. But the real crippling factor, is that we're re-compiling the template string _every time_ we generate a URL. Compilation of a template string into a compiled template is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.
+Looking at the code, I realise that we're using [Handlebars](http://handlebarsjs.com/) to convert URL templates into URLs. But the real crippling factor is that we're re-compiling the template string _every time_ we generate a URL. Compilation of a template string into a compiled template is slow - intentionally so. By doing most of the work up-front, the runtime action of turning a compiled template into a populated string can be made as fast as possible.
 
 With this information uncovered, a fix is easy. We _could_ compile the template string and save it for re-use. But, the template is slightly different for each product on the website, so we'd have to do at least one compilation per request. A better alternative, which avoids the use of a library entirely, is to simply use `String.replace()` to replace each variable in the string for the value we want.
 
 ### The Results
 
-Running the improved code through the V8-profiler again yeilds this profile chart:
+Running the improved code through the V8-profiler again yields this profile chart:
 
 ![Ahh, much better](/static/profile-driven-development/profile_after_highlighted.png)
 *Ahh, much better*
@@ -66,4 +66,4 @@ The bits highlighted in the red box are the pieces of middleware which were prev
 
 The impact on CPU was clear as well. When put through another load test, rather than CPU being pegged at 95-100% for the duration, it increased and decreased with the amount of load being put through it. This is exactly what we'd expect to see from a system such as this.
 
-Whilst this bit of code doesn't need optimising any further yet, this did get me thinking - is `String.replace()` the best method for this task? For the answer to that, you have to wait until next time...
+Whilst this bit of code doesn't need optimising any further yet, this did get me thinking - is `String.replace()` the best method for this task? For the answer to that, you'll have to wait until next time...
